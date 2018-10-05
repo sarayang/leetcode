@@ -15,24 +15,38 @@ package DP;
  Input: "cbbd"
  Output: "bb"
 
- Amazon
- 12
- Microsoft
- 5
- Adobe
- 5
- Google
- 3
- Baidu
- 3
- Alibaba
- 3
- Facebook
- 2
- Huawei
- 2
- IBM
- 2
  */
 public class LongestPalindromicSubstring {
+    public String longestPalindrome(String s) {
+        if (s.length() == 0 || s == null) {
+            return s;
+        }
+
+        boolean[][] f = new boolean[s.length()][s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            f[i][i] = true;
+        }
+
+        int max = 0;
+        int[] indices = new int[2];
+        for (int j = 0; j < s.length(); j++) {
+            for (int i = 0; i <= j; i++) {
+                // f[i + 1][j - 1] something likes:
+                // b aba d
+                // i     j : f[i + 1][j - 1] means if f[s.substring(i+1, j-1+1)] //"aba" is a palindrome
+                f[i][j] = s.charAt(i) == s.charAt(j) && ((j - i <= 2) || f[i + 1][j - 1] == true);
+
+                if (f[i][j] == true) {
+                    max = Math.max(max, j - i + 1);
+                    if (max == j - i + 1) {
+                        indices[0] = i;
+                        indices[1] = j;
+                    }
+                }
+
+            }
+        }
+        return s.substring(indices[0], indices[1] + 1);
+
+    }
 }
