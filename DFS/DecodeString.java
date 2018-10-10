@@ -1,70 +1,56 @@
 package DFS;
 
-import java.util.Stack;
+import java.util.Deque;
+import java.util.LinkedList;
 
 /**
  * Created by YANGSONG on 2018-10-04.
  */
 public class DecodeString {
     public String decodeString(String s) {
+        if (s.length() == 0) {
+            return "";
+        }
+        Deque<String> string = new LinkedList<>();
+        Deque<Integer> integ = new LinkedList<>();
         String res = "";
-        Stack<Integer> countStack = new Stack<>();
-        Stack<String> resStack = new Stack<>();
-        int idx = 0;
-        while (idx < s.length()) {
-            if (res.equals("")) {
-                System.out.println("empty - index: " + idx);
-            } else {
-                System.out.println(res + " - index: " + idx);
-            }
-
-            if (Character.isDigit(s.charAt(idx))) {
-                System.out.println("if");
-
+        // char[] cha = s.toCharArray();
+        int i = 0;
+        while (i < s.length()) {
+            if (Character.isDigit(s.charAt(i))) {
                 int count = 0;
-                while (Character.isDigit(s.charAt(idx))) {
-                    count = 10 * count + (s.charAt(idx) - '0');
-                    idx++;
+                while (Character.isDigit(s.charAt(i))) {
+                    int j = Integer.parseInt(s.substring(i, i+1));
+                    count = count * 10 + j;
+                    i++;
                 }
-                countStack.push(count);
-                System.out.println(res);
-            }
-            else if (s.charAt(idx) == '[') {
-                System.out.println("1st elseif");
-
-                resStack.push(res);
+                integ.offer(count);
+            } else if (s.charAt(i) == '[') {
+                string.offer(res);
                 res = "";
-                idx++;
-                System.out.println(res);
-            }
-            else if (s.charAt(idx) == ']') {
-                System.out.println("2nd elseif");
-
-                String stt = resStack.pop();
-                System.out.println(stt);
-                StringBuilder temp = new StringBuilder(stt);
-                int repeatTimes = countStack.pop();
-                for (int i = 0; i < repeatTimes; i++) {
-                    temp.append(res);
+                i++;
+            } else if (s.charAt(i) == ']') {
+                StringBuilder sb = new StringBuilder(string.pollLast());
+                int num = integ.pollLast();
+                for (int m = 0; m < num; m++) {
+                    sb.append(res);
                 }
-                res = temp.toString();
-                idx++;
-                System.out.println(res);
-            }
-            else {
-                System.out.println("else");
-
-                res += s.charAt(idx++);
-                System.out.println(res);
+                res = sb.toString();
+                i++;
+            } else {
+                res += s.charAt(i);
+                i++;
             }
         }
         return res;
     }
 
+
+
     public static void main(String[] args) {
         DecodeString ds = new DecodeString();
         String s = "3[aub]";
         String res = ds.decodeString(s);
-//        System.out.println(res);
+        System.out.println(res);
     }
 }
